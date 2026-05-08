@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "react-confetti";
 
 import families from "../data/families";
@@ -9,6 +8,8 @@ import {
   collection,
   addDoc,
   serverTimestamp,
+  getDocs,
+  query,
 } from "firebase/firestore";
 
 import { db } from "../firebase";
@@ -17,7 +18,29 @@ import { db } from "../firebase";
 export default function RSVPSection({
   joinedData,
   setJoinedData,
-}) {
+}) 
+{
+
+  useEffect(() => {
+  const fetchFamilies = async () => {
+    const snapshot = await getDocs(
+      query(collection(db, "families"))
+    );
+
+    const data = snapshot.docs.map(
+      (doc) => doc.data().name
+    );
+
+setFamilyOptions(
+  data.sort((a, b) =>
+    a.localeCompare(b)
+  )
+);
+  };
+
+  fetchFamilies();
+}, []);
+
   const [step, setStep] = useState(null);
 
   const [showConfetti, setShowConfetti] =
@@ -30,6 +53,17 @@ export default function RSVPSection({
     members: "",
     message: "",
   });
+const [customFamily, setCustomFamily] =
+  useState("");
+
+  const finalFamily =
+  formData.family === "other"
+    ? customFamily
+    : formData.family;
+
+    const [familyOptions, setFamilyOptions] =
+  useState([]);
+
 
   // SUBMIT
 
@@ -44,12 +78,35 @@ const handleSubmit = async (e) => {
     alert("Please complete all required fields.");
     return;
   }
+const familySnapshot = await getDocs(
+  query(collection(db, "families"))
+);
 
+const existingFamilies =
+  familySnapshot.docs.map(
+    (doc) => doc.data().name.toLowerCase()
+  );
+
+if (
+  !existingFamilies.includes(
+    finalFamily.toLowerCase()
+  )
+) {
+  await addDoc(
+    collection(db, "families"),
+    {
+      name: finalFamily,
+      createdAt: serverTimestamp(),
+    }
+  );
+}
   try {
     await addDoc(
+      
       collection(db, "participants"),
       {
-        ...formData,
+...formData,
+family: finalFamily,
         memberCount: parseInt(
           formData.memberCount
         ),
@@ -214,29 +271,57 @@ const handleSubmit = async (e) => {
                   </p>
                 </div>
 
-                {/* FAMILY */}
+              {/* FAMILY */}
 
-                <select
-                  required
-                  value={formData.family}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      family: e.target.value,
-                    })
-                  }
-                  className="w-full rounded-2xl border-2 border-gray-200 p-5 text-lg focus:border-pink-500 focus:outline-none"
-                >
-                  <option value="">
-                    Select Your Family
-                  </option>
+<div className="space-y-5">
+  <select
+    value={formData.family}
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        family: e.target.value,
+      })
+    }
+    className="w-full rounded-2xl border-2 border-gray-200 p-5 text-lg focus:border-pink-500 focus:outline-none"
+  >
+    <option value="">
+      Select Your Family
+    </option>
 
-                  {families.map((family) => (
-                    <option key={family}>
-                      {family}
-                    </option>
-                  ))}
-                </select>
+{familyOptions.map((family) => (      <option
+        key={family}
+        value={family}
+      >
+        {family}
+      </option>
+    ))}
+
+    <option value="other">
+      My Family Name Is Not Listed
+    </option>
+  </select>
+
+  {formData.family === "other" && (
+    <motion.input
+      initial={{
+        opacity: 0,
+        y: 20,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+      }}
+      required
+      type="text"
+      placeholder="Enter your family name"
+      value={customFamily}
+      onChange={(e) =>
+        setCustomFamily(e.target.value)
+      }
+      className="w-full rounded-2xl border-2 border-gray-200 p-5 text-lg focus:border-orange-500 focus:outline-none"
+    />
+  )}
+</div>
 
                 {/* NAME */}
 
