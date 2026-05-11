@@ -15,3 +15,169 @@ body {
 * {
   box-sizing: border-box;
 }
+/* =========================
+   SCANNER CONTAINER
+========================= */
+
+#scanner {
+  border: none !important;
+  overflow: hidden;
+  border-radius: 28px;
+}
+
+/* REMOVE DEFAULT BORDERS */
+
+#scanner * {
+  border-color: #e5e7eb !important;
+  box-shadow: none !important;
+}
+
+/* VIDEO */
+
+#scanner video {
+  width: 100% !important;
+  border-radius: 24px;
+  object-fit: cover !important;
+}
+
+/* REMOVE DASHED AREA */
+
+#scanner__scan_region {
+  border: none !important;
+  min-height: auto !important;
+}
+
+/* REMOVE DEFAULT IMAGE */
+
+#scanner img {
+  display: none !important;
+}
+
+/* =========================
+   DASHBOARD LAYOUT
+========================= */
+
+#scanner__dashboard_section {
+  padding-top: 20px;
+}
+
+#scanner__dashboard_section_csr {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+/* LABEL */
+
+#scanner__dashboard_section_csr span {
+  font-size: 15px !important;
+  font-weight: 700;
+  color: #071739;
+}
+
+/* =========================
+   CAMERA SELECT
+========================= */
+
+#html5-qrcode-select-camera {
+  min-width: 240px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid #d1d5db;
+  background: white;
+  font-size: 15px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}
+
+/* =========================
+   PRIMARY BUTTONS
+========================= */
+
+#html5-qrcode-button-camera-start,
+#html5-qrcode-button-camera-stop,
+#html5-qrcode-button-file-selection {
+  background: #071739 !important;
+  color: white !important;
+  border: none !important;
+  padding: 14px 22px !important;
+  border-radius: 16px !important;
+  font-size: 15px;
+  font-weight: 700 !important;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+/* HOVER */
+
+#html5-qrcode-button-camera-start:hover,
+#html5-qrcode-button-camera-stop:hover,
+#html5-qrcode-button-file-selection:hover {
+  opacity: 0.92;
+}
+
+/* =========================
+   IMAGE MODE SWITCH
+========================= */
+
+#html5-qrcode-anchor-scan-type-change {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: #eef2ff;
+  color: #1f3f95 !important;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#html5-qrcode-anchor-scan-type-change:hover {
+  background: #dbe4ff;
+}
+
+/* =========================
+   FILE INPUT AREA
+========================= */
+
+#scanner__filescan_input {
+  margin-top: 16px !important;
+}
+
+input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid #d1d5db;
+  background: white;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  #scanner__dashboard_section_csr {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #html5-qrcode-select-camera {
+    width: 100%;
+    min-width: unset;
+  }
+
+  #html5-qrcode-button-camera-start,
+  #html5-qrcode-button-camera-stop,
+  #html5-qrcode-button-file-selection {
+    width: 100%;
+  }
+
+}

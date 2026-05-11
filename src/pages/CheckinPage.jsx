@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -21,7 +22,8 @@ export default function CheckinPage() {
     useState(false);
 const [confirming, setConfirming] =
   useState(false);
-
+const participantRef =
+  useRef(null);
 
 
   useEffect(() => {
@@ -59,7 +61,15 @@ const [confirming, setConfirming] =
             await response.json();
 
           setParticipant(data);
+setTimeout(() => {
 
+  participantRef.current
+    ?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+
+}, 200);
         } catch (error) {
 
           console.error(error);
@@ -79,8 +89,7 @@ const [confirming, setConfirming] =
 
 
     return () => {
-      scanner.clear();
-    };
+scanner.clear().catch(() => {});    };
 
   }, []);
 
@@ -253,7 +262,9 @@ const [confirming, setConfirming] =
 
         {/* PARTICIPANT CARD */}
 
-        <div className={`rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 ${
+        <div   ref={participantRef}
+ 
+        className={`rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 ${
           participant?.checkedIn === "YES"
             ? "bg-red-50 border border-red-200"
             : participant
