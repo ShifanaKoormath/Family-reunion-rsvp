@@ -110,7 +110,7 @@ export default function HeroSection() {
               </a>
 
               <a
-                href="https://maps.google.com"
+                href="https://maps.app.goo.gl/NXDvSc1WwW4xtoDSA?g_st=aw"
                 target="_blank"
                 rel="noreferrer"
                 className="px-10 py-5 rounded-full border-2 border-[#1f3f95] text-[#1f3f95] text-lg font-bold hover:bg-[#1f3f95] hover:text-white transition"
