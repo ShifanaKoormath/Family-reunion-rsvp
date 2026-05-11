@@ -40,53 +40,82 @@ const participantRef =
 
 
 
-    scanner.render(
-      async (decodedText) => {
+   scanner.render(
 
-        try {
+  async (decodedText) => {
 
-          const parsed =
-            JSON.parse(decodedText);
+    try {
 
-          if (!parsed.id) return;
+      const parsed =
+        JSON.parse(decodedText);
 
-          setLoading(true);
+      /* validate */
 
-          const response =
-            await fetch(
-              `https://script.google.com/macros/s/AKfycbydj1ZSvtXhNWuiSfAbvzsq6fkDZiSUMlIe1jNTjnE7VWHvGpYcxkAEwWK_N1VfGZiH/exec?id=${parsed.id}`
-            );
+      if (!parsed.id) return;
 
-          const data =
-            await response.json();
+      /* prevent repeated scans */
 
-          setParticipant(data);
-setTimeout(() => {
-
-  participantRef.current
-    ?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-
-}, 200);
-        } catch (error) {
-
-          console.error(error);
-
-        } finally {
-
-          setLoading(false);
-        }
-
-      },
-
-      (error) => {
-        // ignore scanning errors
+      if (
+        lastScannedRef.current ===
+        parsed.id
+      ) {
+        return;
       }
-    );
 
+      lastScannedRef.current =
+        parsed.id;
 
+      /* reset cooldown */
+
+      setTimeout(() => {
+
+        lastScannedRef.current =
+          null;
+
+      }, 4000);
+
+      setLoading(true);
+
+      const response =
+        await fetch(
+          `https://script.google.com/macros/s/AKfycbydj1ZSvtXhNWuiSfAbvzsq6fkDZiSUMlIe1jNTjnE7VWHvGpYcxkAEwWK_N1VfGZiH/exec?id=${parsed.id}`
+        );
+
+      const data =
+        await response.json();
+
+      setParticipant(data);
+
+      /* smooth auto scroll */
+
+      setTimeout(() => {
+
+        participantRef.current
+          ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+
+      }, 200);
+
+    } catch (error) {
+
+      console.error(error);
+
+    } finally {
+
+      setLoading(false);
+    }
+
+  },
+
+  (error) => {
+
+    // ignore scan errors
+
+  }
+
+);
 
     return () => {
 scanner.clear().catch(() => {});    };

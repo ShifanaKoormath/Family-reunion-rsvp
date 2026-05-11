@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useParams } from "react-router-dom";
 
@@ -13,6 +13,9 @@ export default function TicketPage() {
 
   const [loading, setLoading] =
     useState(true);
+const lastScannedRef =
+  useRef(null);
+
 
   useEffect(() => {
 
@@ -81,24 +84,21 @@ export default function TicketPage() {
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-[#071739] via-[#102c5c] to-[#1f3f95] flex items-center justify-center px-6 py-20">
-
+<div className="min-h-screen bg-gradient-to-br from-[#071739] via-[#102c5c] to-[#1f3f95] flex items-center justify-center px-4 md:px-6 py-8 md:py-20">
       <div className="w-full max-w-2xl bg-white rounded-[40px] shadow-2xl overflow-hidden">
 
 
         {/* HEADER */}
 
-        <div className="bg-gradient-to-r from-pink-600 via-orange-500 to-blue-700 px-10 py-10 text-white text-center">
-
+<div className="bg-gradient-to-r from-pink-600 via-orange-500 to-blue-700 px-6 md:px-10 py-6 md:py-10 text-white text-center">
           <p className="uppercase tracking-[0.4em] text-sm font-semibold opacity-80">
             Family Reunion 2026
           </p>
 
-          <h1 className="mt-4 text-5xl font-black">
-            Entry Pass
+<h1 className="mt-4 text-3xl md:text-5xl font-black">            Entry Pass
           </h1>
 
-          <p className="mt-3 text-lg opacity-90">
+          <p className="mt-3 text-base md:text-lg opacity-90">
             Please present this QR during entry
           </p>
 
@@ -108,21 +108,18 @@ export default function TicketPage() {
 
         {/* BODY */}
 
-        <div className="px-10 py-14">
-
-          <div className="grid md:grid-cols-2 gap-10 items-center">
-
+<div className="px-6 md:px-10 py-8 md:py-14">
+<div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-10 items-center">
 
             {/* DETAILS */}
 
-            <div>
-
-              <h2 className="text-4xl font-black text-[#1f3f95]">
-                {participant.family}
+<div className="order-2 md:order-1 w-full">
+  
+<h2 className="text-3xl md:text-4xl font-black text-[#1f3f95] leading-tight">                {participant.family}
               </h2>
 
-              <div className="mt-8 space-y-5">
-
+<div className="mt-6 md:mt-8 space-y-4 md:space-y-5">
+  
                 <div>
                   <p className="text-gray-500 text-sm uppercase tracking-widest">
                     Registered By
@@ -171,20 +168,24 @@ export default function TicketPage() {
 
             {/* QR */}
 
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center order-1 md:order-2">
 
-              <div className="bg-white p-6 rounded-[30px] shadow-xl border border-gray-100">
+              <div className="bg-white p-3 md:p-6 rounded-[24px] md:rounded-[30px] shadow-xl border border-gray-100">
 
                 <QRCodeCanvas
                   value={JSON.stringify({
                     id: participant.id,
                   })}
-                  size={240}
+                  size={
+  window.innerWidth < 768
+    ? 210
+    : 240
+}
                 />
 
               </div>
 
-              <p className="mt-6 text-center text-gray-600 leading-relaxed">
+              <p className="mt-4 md:mt-6 text-sm md:text-base text-center text-gray-600 leading-relaxed">
                 This QR will be scanned during entry verification.
               </p>
 
