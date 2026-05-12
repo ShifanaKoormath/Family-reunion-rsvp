@@ -450,13 +450,19 @@ const filteredParticipants =
 
       {/* SCANNER */}
 
-      <Link
+<Link
 
-        to="/admin/checkin"
+  to="/admin/checkin"
 
-        onClick={() =>
-          setShowActions(false)
-        }
+  target="_blank"
+
+  rel="noopener noreferrer"
+
+  onClick={() =>
+    setShowActions(false)
+  }
+
+
 
         className="block w-full bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100 rounded-2xl p-4 active:scale-[0.98] transition"
       >
@@ -619,19 +625,20 @@ const filteredParticipants =
 
 
 
-            {/* CHECK-IN */}
+           {/* CHECK-IN */}
 
-            <Link
-              to="/admin/checkin"
+<Link
+  to="/admin/checkin"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg hover:scale-[1.02] transition"
+>
 
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg hover:scale-[1.02] transition"
-            >
+  <CheckCircle2 className="w-5 h-5" />
 
-              <CheckCircle2 className="w-5 h-5" />
+  Open Scanner
 
-              Open Scanner
-
-            </Link>
+</Link>
 
           </div>
 
