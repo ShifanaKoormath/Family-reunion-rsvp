@@ -346,79 +346,76 @@ const filteredParticipants =
 
         onClick={async () => {
 
-          setShowActions(false);
+  setShowActions(false);
 
-          try {
+  try {
 
-            setSendingBulk(true);
+    setSendingBulk(true);
 
-            const pending =
-              participants.filter(
-                (p) =>
-                  p.qrSent !== "YES"
-              );
+    const participant =
+      participants.find(
+        (p) =>
+          p.qrSent !== "YES"
+      );
 
+    if (!participant) {
 
+      toast.success(
+        "All QR tickets already dispatched"
+      );
 
-            for (
-              const participant
-              of pending
-            ) {
+      return;
+    }
 
-              window.open(
-                participant.whatsappLink,
-                "_blank"
-              );
+    const tab =
+      window.open(
+        participant.whatsappLink,
+        "_blank"
+      );
 
+    if (!tab) {
 
+      toast.error(
+        "Popup blocked"
+      );
 
-              await fetch(
-                `https://script.google.com/macros/s/AKfycbydj1ZSvtXhNWuiSfAbvzsq6fkDZiSUMlIe1jNTjnE7VWHvGpYcxkAEwWK_N1VfGZiH/exec?sent=true&id=${participant.id}`
-              );
+      return;
+    }
 
+    await fetch(
+      `https://script.google.com/macros/s/AKfycbydj1ZSvtXhNWuiSfAbvzsq6fkDZiSUMlIe1jNTjnE7VWHvGpYcxkAEwWK_N1VfGZiH/exec?sent=true&id=${participant.id}`
+    );
 
+    setParticipants(
+      (prev) =>
+        prev.map((p) =>
+          p.id === participant.id
+            ? {
+                ...p,
+                qrSent: "YES",
+              }
+            : p
+        )
+    );
 
-              setParticipants(
-                (prev) =>
-                  prev.map((p) =>
-                    p.id === participant.id
-                      ? {
-                          ...p,
-                          qrSent: "YES",
-                        }
-                      : p
-                  )
-              );
+    toast.success(
+      `Opened QR for ${participant.name}`
+    );
 
+  } catch (error) {
 
+    console.error(error);
 
-              await new Promise(
-                (resolve) =>
-                  setTimeout(
-                    resolve,
-                    1200
-                  )
-              );
-            }
+    toast.error(
+      "QR dispatch failed"
+    );
 
-            toast.success(
-              "Pending QR tickets opened successfully ✅"
-            );
+  } finally {
 
-          } catch (error) {
+    setSendingBulk(false);
+  }
 
-            console.error(error);
-
-            toast.error(
-              "QR dispatch failed"
-            );
-
-          } finally {
-
-            setSendingBulk(false);
-          }
-
-        }}
+}}
 
         className="w-full bg-gradient-to-r from-[#eef2ff] to-[#f5f7ff] border border-[#dbe4ff] rounded-2xl p-4 flex items-center gap-4 active:scale-[0.98] transition"
       >
@@ -1155,7 +1152,37 @@ const filteredParticipants =
     try {
 
       setSavingEntry(true);
+/* REQUIRED FIELD VALIDATION */
 
+if (
+  !formData.name.trim() ||
+  !formData.family.trim() ||
+  !formData.place.trim()
+) {
+
+  toast.error(
+    "Please fill all required fields"
+  );
+
+  setSavingEntry(false);
+
+  return;
+}
+
+/* MEMBERS VALIDATION */
+
+if (
+  Number(formData.members) <= 0
+) {
+
+  toast.error(
+    "Members count must be valid"
+  );
+
+  setSavingEntry(false);
+
+  return;
+}
       const params =
         new URLSearchParams({
 
