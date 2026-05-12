@@ -25,7 +25,9 @@ const [confirming, setConfirming] =
 const participantRef =
   useRef(null);
 
-
+const lastScannedRef =
+  useRef(null);
+  
   useEffect(() => {
 
     const scanner =
