@@ -8,6 +8,7 @@ import {
   Ticket,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function AdminPage() {
 
@@ -400,7 +401,7 @@ const filteredParticipants =
               );
             }
 
-            alert(
+            toast.success(
               "Pending QR tickets opened successfully ✅"
             );
 
@@ -408,7 +409,7 @@ const filteredParticipants =
 
             console.error(error);
 
-            alert(
+            toast.error(
               "QR dispatch failed"
             );
 
@@ -587,7 +588,7 @@ const filteredParticipants =
                     );
                   }
 
-                  alert(
+                  toast.success(
                     "Pending QR tickets opened successfully ✅"
                   );
 
@@ -595,7 +596,7 @@ const filteredParticipants =
 
                   console.error(error);
 
-                  alert(
+                  toast.error(
                     "QR dispatch failed"
                   );
 
@@ -1231,7 +1232,7 @@ const filteredParticipants =
 
         setShowModal(false);
 
-        alert(
+        toast.success(
           "Manual entry added successfully ✅"
         );
       }
@@ -1240,7 +1241,7 @@ const filteredParticipants =
 
       console.error(error);
 
-      alert(
+      toast.error(
         "Failed to add entry"
       );
 

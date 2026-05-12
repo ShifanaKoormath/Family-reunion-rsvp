@@ -12,6 +12,8 @@ import {
   CheckCircle2,
   AlertTriangle,
 } from "lucide-react";
+import toast from "react-hot-toast";
+
 
 export default function CheckinPage() {
 
@@ -27,7 +29,7 @@ const participantRef =
 
 const lastScannedRef =
   useRef(null);
-  
+
   useEffect(() => {
 
     const scanner =
@@ -575,7 +577,7 @@ scanner.clear().catch(() => {});    };
                               .toLocaleString(),
                         });
 
-                        alert(
+                        toast.success(
                           "Participation Confirmed ✅"
                         );
                       }
@@ -584,7 +586,7 @@ scanner.clear().catch(() => {});    };
 
                       console.error(error);
 
-                      alert(
+                      toast.error(
                         "Check-in failed"
                       );
 
