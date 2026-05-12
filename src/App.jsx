@@ -5,13 +5,33 @@ import {
 
 import HomePage from "./pages/HomePage";
 import TicketPage from "./pages/TicketPage";
-import AdminPage from "./pages/AdminPage";
-import CheckinPage from "./pages/CheckinPage";
+import {
+  lazy,
+  Suspense,
+} from "react";
+
+const AdminPage =
+  lazy(() =>
+    import("./pages/AdminPage")
+  );
+
+const CheckinPage =
+  lazy(() =>
+    import("./pages/CheckinPage")
+  );
 
 export default function App() {
   return (
-    <Routes>
-      <Route
+<Suspense
+  fallback={
+    <div className="min-h-screen flex items-center justify-center bg-[#071739] text-white text-2xl font-bold">
+      Loading...
+    </div>
+  }
+>
+
+  <Routes>
+          <Route
         path="/"
         element={<HomePage />}
       />
@@ -29,5 +49,6 @@ export default function App() {
   element={<CheckinPage />}
 />
     </Routes>
+    </Suspense>
   );
 }
