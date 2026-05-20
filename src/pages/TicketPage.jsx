@@ -24,7 +24,7 @@ const lastScannedRef =
       try {
 
         const response = await fetch(
-          `https://script.google.com/macros/s/AKfycbydj1ZSvtXhNWuiSfAbvzsq6fkDZiSUMlIe1jNTjnE7VWHvGpYcxkAEwWK_N1VfGZiH/exec?id=${id}`
+          `https://script.google.com/macros/s/AKfycbxoKdExF7AsSD-WMRY1Uh714JH2QIb3IdupyfRx9kYlSUFsVtgLBo8rrzqkkF4vOJma/exec?id=${id}`
         );
 
         const data =

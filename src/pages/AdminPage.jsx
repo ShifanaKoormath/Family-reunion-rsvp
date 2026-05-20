@@ -57,35 +57,60 @@ const [formData, setFormData] =
   const [loading, setLoading] =
     useState(true);
 
-  useEffect(() => {
 
     async function fetchParticipants() {
 
-      try {
+  try {
 
-        const response = await fetch(
-          "https://script.google.com/macros/s/AKfycbydj1ZSvtXhNWuiSfAbvzsq6fkDZiSUMlIe1jNTjnE7VWHvGpYcxkAEwWK_N1VfGZiH/exec?list=true"
-        );
+    const response =
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbxoKdExF7AsSD-WMRY1Uh714JH2QIb3IdupyfRx9kYlSUFsVtgLBo8rrzqkkF4vOJma/exec"
+      );
 
-        const data =
-          await response.json();
+    const data =
+      await response.json();
 
-        setParticipants(data);
+    setParticipants(data);
 
-      } catch (error) {
+  } catch (error) {
 
-        console.error(error);
+    console.error(error);
 
-      } finally {
+  } finally {
 
-        setLoading(false);
-      }
-    }
+    setLoading(false);
+  }
+}
+  useEffect(() => {
 
-    fetchParticipants();
+  // Initial fetch
 
-  }, []);
+  fetchParticipants();
 
+
+
+
+  // Auto refresh every 10s
+
+  const interval =
+
+    setInterval(() => {
+
+      fetchParticipants();
+
+    }, 10000);
+
+
+
+
+  // Cleanup
+
+  return () => {
+
+    clearInterval(interval);
+  };
+
+}, []);
 
 useEffect(() => {
 
@@ -383,7 +408,7 @@ const filteredParticipants =
     }
 
     await fetch(
-      `https://script.google.com/macros/s/AKfycbydj1ZSvtXhNWuiSfAbvzsq6fkDZiSUMlIe1jNTjnE7VWHvGpYcxkAEwWK_N1VfGZiH/exec?sent=true&id=${participant.id}`
+      `https://script.google.com/macros/s/AKfycbxoKdExF7AsSD-WMRY1Uh714JH2QIb3IdupyfRx9kYlSUFsVtgLBo8rrzqkkF4vOJma/exec?sent=true&id=${participant.id}`
     );
 
     setParticipants(
@@ -557,7 +582,7 @@ const filteredParticipants =
 
 
                     await fetch(
-                      `https://script.google.com/macros/s/AKfycbydj1ZSvtXhNWuiSfAbvzsq6fkDZiSUMlIe1jNTjnE7VWHvGpYcxkAEwWK_N1VfGZiH/exec?sent=true&id=${participant.id}`
+                      `https://script.google.com/macros/s/AKfycbxoKdExF7AsSD-WMRY1Uh714JH2QIb3IdupyfRx9kYlSUFsVtgLBo8rrzqkkF4vOJma/exec?sent=true&id=${participant.id}`
                     );
 
 
@@ -947,6 +972,8 @@ const filteredParticipants =
 
               <div className="flex items-center gap-4">
 
+              {participant.whatsapp !== "INVALID_NUMBER" ? (
+
                 <a
                   href={participant.whatsappLink}
                   target="_blank"
@@ -957,7 +984,7 @@ const filteredParticipants =
                     try {
 
                       await fetch(
-                        `https://script.google.com/macros/s/AKfycbydj1ZSvtXhNWuiSfAbvzsq6fkDZiSUMlIe1jNTjnE7VWHvGpYcxkAEwWK_N1VfGZiH/exec?sent=true&id=${participant.id}`
+                        `https://script.google.com/macros/s/AKfycbxoKdExF7AsSD-WMRY1Uh714JH2QIb3IdupyfRx9kYlSUFsVtgLBo8rrzqkkF4vOJma/exec?sent=true&id=${participant.id}`
                       );
 
                       setParticipants((prev) =>
@@ -983,6 +1010,16 @@ const filteredParticipants =
                   <MessageCircle className="w-6 h-6" />
 
                 </a>
+
+              ) : (
+
+                <span className="bg-red-100 text-red-700 px-4 py-2 rounded-full font-bold text-sm">
+
+                  Invalid Number
+
+                </span>
+
+              )}
 
 
 
@@ -1031,11 +1068,65 @@ const filteredParticipants =
 
               ) : (
 
-                <span className="inline-flex items-center gap-2 bg-red-100 text-red-700 px-4 py-2 rounded-full font-bold">
+              <button
 
-                  Pending
+                onClick={async () => {
 
-                </span>
+                  try {
+
+                    const response =
+                      await fetch(
+                        `https://script.google.com/macros/s/AKfycbxoKdExF7AsSD-WMRY1Uh714JH2QIb3IdupyfRx9kYlSUFsVtgLBo8rrzqkkF4vOJma/exec?checkin=true&id=${participant.id}`
+                      );
+
+                    const result =
+                      await response.json();
+
+                    if (result.success) {
+
+                      setParticipants((prev) =>
+                        prev.map((p) =>
+                          p.id === participant.id
+                            ? {
+                                ...p,
+                                checkedIn: "YES",
+                                checkedInTime:
+                                  new Date()
+                                    .toLocaleString(),
+                              }
+                            : p
+                        )
+                      );
+
+                      toast.success(
+                        `${participant.name} checked in successfully`
+                      );
+
+                    } else {
+
+                      toast.error(
+                        result.message
+                      );
+                    }
+
+                  } catch (error) {
+
+                    console.error(error);
+
+                    toast.error(
+                      "Check-in failed"
+                    );
+                  }
+                }}
+
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-full font-bold shadow-lg hover:scale-105 transition"
+              >
+
+                <CheckCircle2 className="w-4 h-4" />
+
+                Mark Check-In
+
+              </button>
 
               )}
 
@@ -1194,7 +1285,7 @@ if (
 
       const response =
         await fetch(
-          `https://script.google.com/macros/s/AKfycbydj1ZSvtXhNWuiSfAbvzsq6fkDZiSUMlIe1jNTjnE7VWHvGpYcxkAEwWK_N1VfGZiH/exec?${params}`
+          `https://script.google.com/macros/s/AKfycbxoKdExF7AsSD-WMRY1Uh714JH2QIb3IdupyfRx9kYlSUFsVtgLBo8rrzqkkF4vOJma/exec?${params}`
         );
 
       const result =
