@@ -162,7 +162,20 @@ useEffect(() => {
         p.checkedIn === "YES"
     ).length;
 
-
+    const checkedInMembers =
+  participants
+    .filter(
+      (p) =>
+        p.checkedIn === "YES"
+    )
+    .reduce(
+      (sum, p) =>
+        sum +
+        Number(
+          p.members || 0
+        ),
+      0
+    );
 
 
   if (loading) {
@@ -682,7 +695,7 @@ const filteredParticipants =
 
       {/* STATS */}
 
-      <div className="grid md:grid-cols-3 gap-6 mt-10">
+      <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6 mt-10">
 
         <div className="bg-white rounded-[30px] p-8 shadow-xl">
 
@@ -724,6 +737,20 @@ const filteredParticipants =
 
           <p className="mt-3 text-gray-500">
             Checked In
+          </p>
+
+        </div>
+        
+        <div className="bg-white rounded-[30px] p-8 shadow-xl">
+
+          <Users className="w-10 h-10 text-blue-600" />
+
+          <h2 className="mt-5 text-5xl font-black text-[#071739]">
+            {checkedInMembers}
+          </h2>
+
+          <p className="mt-3 text-gray-500">
+            Members Joined So Far
           </p>
 
         </div>
